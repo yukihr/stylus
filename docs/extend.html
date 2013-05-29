@@ -1,0 +1,139 @@
+<!DOCTYPE html><html><head><title>Stylus</title><link rel="stylesheet" href="../main.css"><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></head><body><div id="container"><h1><a href='http://learnboost.github.com/stylus'>Stylus</a></h1><p class="tagline"><em class="expressive">Expressive, </em><em class="dynamic">dynamic, </em><em class="robust">robust </em><em class="css">CSS</em></p><div id="ribbon"><a href="http://github.com/learnboost/stylus">Fork me on GitHub</a></div><ul id="menu"><li><a href="../docs/selectors.html">Selectors</a></li><li><a href="../docs/variables.html">Variables</a></li><li><a href="../docs/interpolation.html">Interpolation</a></li><li><a href="../docs/operators.html">Operators</a></li><li><a href="../docs/mixins.html">Mixins</a></li><li><a href="../docs/functions.html">Functions</a></li><li><a href="../docs/kwargs.html">Keyword Arguments</a></li><li><a href="../docs/bifs.html">Built-in Functions</a></li><li><a href="../docs/vargs.html">Rest Params</a></li><li><a href="../docs/comments.html">Comments</a></li><li><a href="../docs/conditionals.html">Conditionals</a></li><li><a href="../docs/iteration.html">Iteration</a></li><li><a href="../docs/import.html">@import</a></li><li><a href="../docs/media.html">@media</a></li><li><a href="../docs/font-face.html">@font-face</a></li><li><a href="../docs/keyframes.html">@keyframes</a><li><a href="../docs/extend.html">@extend</a></li><li><a href="../docs/functions.url.html">url()</a></li><li><a href="../docs/literal.html">CSS Literal</a></li><li><a href="../docs/css-style.html">CSS Style Syntax</a></li><li><a href="../docs/escape.html">Char Escaping</a></li><li><a href="../docs/executable.html">Executable</a></li><li><a href="../docs/error-reporting.html">Error Reporting</a></li><li><a href="../docs/middleware.html">Connect Middleware</a></li><li><a href="../docs/introspection.html">Introspection API</a></li><li><a href="../docs/js.html">JavaScript API</a></li>
+  <li><a href="http://github.com/visionmedia/nib">CSS3 Extensions with Nib</a></li>
+  <li><a href="../try.html">Try Stylus Online!</a></li>
+  </ul><div id="content"><ul>
+<li>元文書: [stylus/docs/extend.md at f9ed220d7e5f0b44aeaca58ffd6490566b5f0757 · LearnBoost/stylus · GitHub]
+(https://github.com/LearnBoost/stylus/blob/f9ed220d7e5f0b44aeaca58ffd6490566b5f0757/docs/extend.md 
+"stylus/docs/extend.md at f9ed220d7e5f0b44aeaca58ffd6490566b5f0757 · LearnBoost/stylus · GitHub")</li>
+</ul>
+
+<h2>Extend <a href="http://learnboost.github.com/stylus/docs/extend.html">原文</a></h2>
+
+<p>Stylus <strong>@extend</strong> ディレィティブは幾つかの微妙な違いはありますが、<a href="http://sass-lang.com/docs/yardoc/file.SASS_REFERENCE.html#extend">SASSの実装</a>からインスピレーションを得ています。
+  特徴は、他のセマンティックルールセットを継承することによる、メンテナンスの簡素化です。</p>
+
+<h3>mixinsでの“展開”</h3>
+
+<p>同様の効果を得るためにmixinsを使用することもできますが、これはCSSが重複する可能性があります。
+  複数のクラスを定義する典型的なパターンは、以下に示すように、"警告メッセージ"などで幾つかの要素を組み合わせる場合です。</p>
+
+<p>このテクニックはうまく動作しますが、メンテナンスが困難です。</p>
+
+<pre><code>  .message,
+  .warning {
+    padding: 10px;
+    border: 1px solid #eee;
+  }
+
+  .warning {
+    color: #E2E21E;
+  }
+</code></pre>
+
+<h3><code>__@extend__</code>の使用方法</h3>
+
+<p>単に目的のセレクタを渡すだけで、<code>__@extend__</code> によって同じ出力が得られます。
+  Stylusは <code>.warning</code> セレクタに既存の <code>.message</code> ルールセットを付け加えます。
+  その際に <code>.warning</code> クラスは  <code>.message</code> からプロパティを継承します。</p>
+
+<pre><code>  .message {
+    padding: 10px;
+    border: 1px solid #eee;
+  }
+
+  .warning {
+    @extend .message;
+    color: #E2E21E;
+  }
+</code></pre>
+
+<p>これは、どのように<code>__@extend__</code> がカスケードされるか検証するためのより複雑な例です。</p>
+
+<pre><code>  red = #E33E1E
+  yellow = #E2E21E
+
+  .message
+    padding: 10px
+    font: 14px Helvetica
+    border: 1px solid #eee
+
+  .warning
+    @extends .message
+    border-color: yellow
+    background: yellow + 70%
+
+  .error
+    @extends .message
+    border-color: red
+    background: red + 70%
+
+  .fatal
+    @extends .error
+    font-weight: bold
+    color: red
+</code></pre>
+
+<p>以下のCSSを生成します。</p>
+
+<pre><code>  .message,
+  .warning,
+  .error,
+  .fatal {
+    padding: 10px;
+    font: 14px Helvetica;
+    border: 1px solid #eee;
+  }
+  .warning {
+    border-color: #e2e21e;
+    background: #f6f6bc;
+  }
+  .error,
+  .fatal {
+    border-color: #e33e1e;
+    background: #f7c5bc;
+  }
+  .fatal {
+    font-weight: bold;
+    color: #e33e1e;
+  }
+</code></pre>
+
+<p>実際にStylusとSASSの異なる点は、SASSではネストしたセレクタに対する <code>__@extend__</code> を許可しない点です。</p>
+
+<pre><code> form
+   button
+     padding: 10px
+
+ a.button
+   @extend form button 
+ Syntax error: Can't extend form button: can't extend nested selectors
+         on line 6 of standard input
+   Use --trace for backtrace.
+</code></pre>
+
+<p>Stylusではセレクタが一致する限り、それは動作する！</p>
+
+<pre><code>   form
+     input[type=text]
+       padding: 5px
+       border: 1px solid #eee
+       color: #ddd
+
+   textarea
+     @extends form input[type=text]
+     padding: 10px
+</code></pre>
+
+<p>結果:</p>
+
+<pre><code>    form input[type=text],
+    form textarea {
+      padding: 5px;
+      border: 1px solid #eee;
+      color: #ddd;
+    }
+    textarea {
+      padding: 10px;
+    }
+</code></pre>
+</div></div></body></html>

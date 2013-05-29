@@ -1,0 +1,89 @@
+<!DOCTYPE html><html><head><title>Stylus</title><link rel="stylesheet" href="../main.css"><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></head><body><div id="container"><h1><a href='http://learnboost.github.com/stylus'>Stylus</a></h1><p class="tagline"><em class="expressive">Expressive, </em><em class="dynamic">dynamic, </em><em class="robust">robust </em><em class="css">CSS</em></p><div id="ribbon"><a href="http://github.com/learnboost/stylus">Fork me on GitHub</a></div><ul id="menu"><li><a href="../docs/selectors.html">Selectors</a></li><li><a href="../docs/variables.html">Variables</a></li><li><a href="../docs/interpolation.html">Interpolation</a></li><li><a href="../docs/operators.html">Operators</a></li><li><a href="../docs/mixins.html">Mixins</a></li><li><a href="../docs/functions.html">Functions</a></li><li><a href="../docs/kwargs.html">Keyword Arguments</a></li><li><a href="../docs/bifs.html">Built-in Functions</a></li><li><a href="../docs/vargs.html">Rest Params</a></li><li><a href="../docs/comments.html">Comments</a></li><li><a href="../docs/conditionals.html">Conditionals</a></li><li><a href="../docs/iteration.html">Iteration</a></li><li><a href="../docs/import.html">@import</a></li><li><a href="../docs/media.html">@media</a></li><li><a href="../docs/font-face.html">@font-face</a></li><li><a href="../docs/keyframes.html">@keyframes</a><li><a href="../docs/extend.html">@extend</a></li><li><a href="../docs/functions.url.html">url()</a></li><li><a href="../docs/literal.html">CSS Literal</a></li><li><a href="../docs/css-style.html">CSS Style Syntax</a></li><li><a href="../docs/escape.html">Char Escaping</a></li><li><a href="../docs/executable.html">Executable</a></li><li><a href="../docs/error-reporting.html">Error Reporting</a></li><li><a href="../docs/middleware.html">Connect Middleware</a></li><li><a href="../docs/introspection.html">Introspection API</a></li><li><a href="../docs/js.html">JavaScript API</a></li>
+  <li><a href="http://github.com/visionmedia/nib">CSS3 Extensions with Nib</a></li>
+  <li><a href="../try.html">Try Stylus Online!</a></li>
+  </ul><div id="content"><ul>
+<li>元文書: <a href="https://github.com/LearnBoost/stylus/blob/0ab9219d80a5304e32437ef3cabb7b3fa1345534/docs/import.md" title="stylus/docs/import.md at 0ab9219d80a5304e32437ef3cabb7b3fa1345534 · LearnBoost/stylus · GitHub">stylus/docs/import.md at 0ab9219d80a5304e32437ef3cabb7b3fa1345534 · LearnBoost/stylus · GitHub</a></li>
+</ul>
+
+<h2>Import <a href="http://learnboost.github.com/stylus/docs/import.html">原文</a></h2>
+
+<p>スタイラスではCSSの <strong>@import</strong> 文と、他のStylusシートの動的なインポートに対応しています。</p>
+
+<h3>CSSの <strong>@import</strong> 文</h3>
+
+<p>拡張子が<code>.css</code>のファイル名は記述通りに扱われます。例えば、</p>
+
+<pre><code> @import "reset.css"
+</code></pre>
+
+<p>これはCSSの <strong>@import</strong> 文として以下のように解釈されます:</p>
+
+<pre><code> @import "reset.css"
+</code></pre>
+
+<h3>Stylusのインポート</h3>
+
+<p><strong>@import</strong> を拡張子<code>.css</code>以外のものに用いるとスタイラスシートのインポートであると解釈されます(例. <code>@import "mixins/border-radius"</code>)</p>
+
+<p><strong>@import</strong> は(node.jsの<code>require.paths</code>と同様に)ディレクトリの配列を走査し、指定されたファイルがそのディレクトリに存在するかをチェックします。この配列にはデフォルトでは一つのパスが格納されており、このパスは<code>filename</code>オプションの<code>dirname</code>で指定されます。したがって、ファイル名が<code>/tmp/testing/stylus/main.styl</code>であるとき、importでは<code>/tmp/testing/stylus/</code>が探索されます。</p>
+
+<p><strong>@import</strong> はindexスタイルもサポートしています。これは、<code>@import blueprint</code>とした時に<code>blueprint.styl</code> <strong>と</strong> <code>blueprint/index.styl</code> <strong>の両方を</strong> 探すことを意味します。この機能はライブラリのすべての機能を提供するとともに、機能ごとのサブセットにファイルを分けておくときに便利です。</p>
+
+<p>例えば、一般的なライブラリのファイル構造は以下のようになるでしょう:</p>
+
+<pre><code>./tablet
+  |-- index.styl 
+  |-- vendor.styl 
+  |-- buttons.styl 
+  |-- images.styl
+</code></pre>
+
+<p>下の例では、<code>paths</code>オプションを用いてStylusに追加のパスを指定しています。<code>./mixins</code>がStylusの<code>paths</code>オプションに追加されているので、<code>./test.styl</code>のなかで、<code>@import "mixins/border-radius"</code>と<code>@import "border-radius"</code>のどちらでも用いることができます。</p>
+
+<pre><code>  /**
+   * Module dependencies.
+   */
+
+  var stylus = require('../')
+    , str = require('fs').readFileSync(__dirname + '/test.styl', 'utf8');
+
+  var paths = [
+      __dirname
+    , __dirname + '/mixins'
+  ];
+
+  stylus(str)
+    .set('filename', __dirname + '/test.styl')
+    .set('paths', paths)
+    .render(function(err, css){
+      if (err) throw err;
+      console.log(css);
+    });
+</code></pre>
+
+<h3>JavaScript Import API</h3>
+
+<p><code>.import(path)</code>メソッドを使うとき、このファイルインポートは展開時に遅延実行されます。</p>
+
+<pre><code>   var stylus = require('../')
+     , str = require('fs').readFileSync(__dirname + '/test.styl', 'utf8');
+
+   stylus(str)
+     .set('filename', __dirname + '/test.styl')
+     .import('mixins/vendor')
+     .render(function(err, css){
+     if (err) throw err;
+     console.log(css);
+   });
+</code></pre>
+
+<p>次の宣言は...</p>
+
+<pre><code> @import 'mixins/vendor'
+</code></pre>
+
+<p>...次と同様です...</p>
+
+<pre><code> .import('mixins/vendor')
+</code></pre>
+</div></div></body></html>

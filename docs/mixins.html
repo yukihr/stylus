@@ -1,0 +1,156 @@
+<!DOCTYPE html><html><head><title>Stylus</title><link rel="stylesheet" href="../main.css"><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></head><body><div id="container"><h1><a href='http://learnboost.github.com/stylus'>Stylus</a></h1><p class="tagline"><em class="expressive">Expressive, </em><em class="dynamic">dynamic, </em><em class="robust">robust </em><em class="css">CSS</em></p><div id="ribbon"><a href="http://github.com/learnboost/stylus">Fork me on GitHub</a></div><ul id="menu"><li><a href="../docs/selectors.html">Selectors</a></li><li><a href="../docs/variables.html">Variables</a></li><li><a href="../docs/interpolation.html">Interpolation</a></li><li><a href="../docs/operators.html">Operators</a></li><li><a href="../docs/mixins.html">Mixins</a></li><li><a href="../docs/functions.html">Functions</a></li><li><a href="../docs/kwargs.html">Keyword Arguments</a></li><li><a href="../docs/bifs.html">Built-in Functions</a></li><li><a href="../docs/vargs.html">Rest Params</a></li><li><a href="../docs/comments.html">Comments</a></li><li><a href="../docs/conditionals.html">Conditionals</a></li><li><a href="../docs/iteration.html">Iteration</a></li><li><a href="../docs/import.html">@import</a></li><li><a href="../docs/media.html">@media</a></li><li><a href="../docs/font-face.html">@font-face</a></li><li><a href="../docs/keyframes.html">@keyframes</a><li><a href="../docs/extend.html">@extend</a></li><li><a href="../docs/functions.url.html">url()</a></li><li><a href="../docs/literal.html">CSS Literal</a></li><li><a href="../docs/css-style.html">CSS Style Syntax</a></li><li><a href="../docs/escape.html">Char Escaping</a></li><li><a href="../docs/executable.html">Executable</a></li><li><a href="../docs/error-reporting.html">Error Reporting</a></li><li><a href="../docs/middleware.html">Connect Middleware</a></li><li><a href="../docs/introspection.html">Introspection API</a></li><li><a href="../docs/js.html">JavaScript API</a></li>
+  <li><a href="http://github.com/visionmedia/nib">CSS3 Extensions with Nib</a></li>
+  <li><a href="../try.html">Try Stylus Online!</a></li>
+  </ul><div id="content"><ul>
+<li>元文書: <a href="https://github.com/LearnBoost/stylus/blob/0ab9219d80a5304e32437ef3cabb7b3fa1345534/docs/mixins.md" title="stylus/docs/mixins.md at 0ab9219d80a5304e32437ef3cabb7b3fa1345534 · LearnBoost/stylus · GitHub">stylus/docs/mixins.md at 0ab9219d80a5304e32437ef3cabb7b3fa1345534 · LearnBoost/stylus · GitHub</a></li>
+</ul>
+
+<h2>ミックスイン <a href="http://learnboost.github.com/stylus/docs/mixins.html">原文</a></h2>
+
+<p>ミックスインと関数は同じ形で定義されますが、利用のされ方が異なります。</p>
+
+<p>例えば、下の<code>border-radius(n)</code>関数は <em>ミックスイン</em> として実行されます。つまり、式の一部としてではなく文として扱われます。</p>
+
+<p><code>border-radius()</code>がセレクターの中で実行される時、プロパティはセレクターの中に展開されてコピーされます。</p>
+
+<pre><code>border-radius(n)
+  -webkit-border-radius n
+  -moz-border-radius n
+  border-radius n
+
+form input[type=button]
+  border-radius(5px)
+</code></pre>
+
+<p>これは下のように展開されます。</p>
+
+<pre><code>form input[type=button] {
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+</code></pre>
+
+<p>ミックスインでは、括弧を完全に省略可能です。これにより、ベンダー独自のプロパティを意識せずに利用することが可能です！</p>
+
+<pre><code>border-radius(n)
+  -webkit-border-radius n
+  -moz-border-radius n
+  border-radius n
+
+form input[type=button]
+  border-radius 5px
+</code></pre>
+
+<p>ミックスイン定義の中の<code>border-radius</code>は再帰的な関数呼び出しではなく、通常のプロパティとして扱われることに注意してください。</p>
+
+<p>更に、自動で定義される<code>arguments</code>ローカル変数を利用して、関数に渡される式や複数の引数を扱うことができます。</p>
+
+<pre><code>border-radius()
+  -webkit-border-radius arguments
+  -moz-border-radius arguments
+  border-radius arguments
+</code></pre>
+
+<p>このような定義により、<code>border-radius 1px 2px / 3px 4px</code>のような形で引数を渡すことが可能です！</p>
+
+<p>さらに便利な利用方法として、ベンダー独自の仕様を意識せずに利用できることがあります。たとえば、IE固有の<code>opacity</code>をサポートするには次のように書くことができます。</p>
+
+<pre><code>    support-for-ie ?= true
+
+    opacity(n)
+      opacity n
+      if support-for-ie
+        filter unquote('progid:DXImageTransform.Microsoft.Alpha(Opacity=' + round(n * 100) + ')')
+
+    #logo
+      &amp;:hover
+        opacity 0.5
+</code></pre>
+
+<p>これは次のように展開されます。</p>
+
+<pre><code>    #logo:hover {
+      opacity: 0.5;
+      filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=50);
+    }
+</code></pre>
+
+<h3>親要素の参照</h3>
+
+<p>ミックスイン定義の中では、親要素を<code>&amp;</code>で参照できます。これにより入れ子構造を作ることなく親要素にアクセスできます。</p>
+
+<p>例えば、テーブルの行の色を１行おきに変えるために、<code>stripe(even, odd)</code>というミックスインを定義することを考えてみましょう。偶数行のために<code>even</code>、奇数行のために<code>odd</code>という初期値を定義し、テーブル行に<code>background-color</code>プロパティを適用します。</p>
+
+<pre><code> stripe(even = #fff, odd = #eee)
+   tr
+     background-color odd
+     &amp;.even
+     &amp;:nth-child(even)
+       background-color even
+</code></pre>
+
+<p>このミックスインは以下のように利用できます。</p>
+
+<pre><code> table
+   stripe()
+   td
+     padding 4px 10px
+
+ table#users
+   stripe(#303030, #494848)
+   td
+     color white
+</code></pre>
+
+<p>次のように、<code>stripe()</code>を親要素の参照を利用せずに定義することもできます。</p>
+
+<pre><code>stripe(even = #fff, odd = #eee)
+  tr
+    background-color odd
+  tr.even
+  tr:nth-child(even)
+    background-color even
+</code></pre>
+
+<p><code>stripe()</code>を通常のプロパティであるかのように利用することもできます。</p>
+
+<pre><code>stripe #fff #000
+</code></pre>
+
+<h3>ミックスインのなかでミックスインを使う</h3>
+
+<p>もちろん、ミックスインの中で他のミックスインを利用することも可能です！</p>
+
+<p>例として、下では<code>comma-list()</code>というミックスインを<code>inline-list()</code>というミックスインを利用して定義しています。
+ <code>inline-list()</code>はリストを１行にし、<code>comma-list()</code>はリストを１行のカンマで区切った形式で表示します。</p>
+
+<pre><code> inline-list()
+   li
+     display inline
+
+ comma-list()
+   inline-list()
+   li
+     &amp;:after
+       content ', '
+     &amp;:last-child:after
+       content ''
+
+ ul
+   comma-list()
+</code></pre>
+
+<p>これは以下のように展開されます。</p>
+
+<pre><code>ul li:after {
+  content: ", ";
+}
+ul li:last-child:after {
+  content: "";
+}
+ul li {
+  display: inline;
+}
+</code></pre>
+</div></div></body></html>

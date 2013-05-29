@@ -1,0 +1,668 @@
+<!DOCTYPE html><html><head><title>Stylus</title><link rel="stylesheet" href="../main.css"><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></head><body><div id="container"><h1><a href='http://learnboost.github.com/stylus'>Stylus</a></h1><p class="tagline"><em class="expressive">Expressive, </em><em class="dynamic">dynamic, </em><em class="robust">robust </em><em class="css">CSS</em></p><div id="ribbon"><a href="http://github.com/learnboost/stylus">Fork me on GitHub</a></div><ul id="menu"><li><a href="../docs/selectors.html">Selectors</a></li><li><a href="../docs/variables.html">Variables</a></li><li><a href="../docs/interpolation.html">Interpolation</a></li><li><a href="../docs/operators.html">Operators</a></li><li><a href="../docs/mixins.html">Mixins</a></li><li><a href="../docs/functions.html">Functions</a></li><li><a href="../docs/kwargs.html">Keyword Arguments</a></li><li><a href="../docs/bifs.html">Built-in Functions</a></li><li><a href="../docs/vargs.html">Rest Params</a></li><li><a href="../docs/comments.html">Comments</a></li><li><a href="../docs/conditionals.html">Conditionals</a></li><li><a href="../docs/iteration.html">Iteration</a></li><li><a href="../docs/import.html">@import</a></li><li><a href="../docs/media.html">@media</a></li><li><a href="../docs/font-face.html">@font-face</a></li><li><a href="../docs/keyframes.html">@keyframes</a><li><a href="../docs/extend.html">@extend</a></li><li><a href="../docs/functions.url.html">url()</a></li><li><a href="../docs/literal.html">CSS Literal</a></li><li><a href="../docs/css-style.html">CSS Style Syntax</a></li><li><a href="../docs/escape.html">Char Escaping</a></li><li><a href="../docs/executable.html">Executable</a></li><li><a href="../docs/error-reporting.html">Error Reporting</a></li><li><a href="../docs/middleware.html">Connect Middleware</a></li><li><a href="../docs/introspection.html">Introspection API</a></li><li><a href="../docs/js.html">JavaScript API</a></li>
+  <li><a href="http://github.com/visionmedia/nib">CSS3 Extensions with Nib</a></li>
+  <li><a href="../try.html">Try Stylus Online!</a></li>
+  </ul><div id="content"><ul>
+<li>元文書: <a href="https://github.com/LearnBoost/stylus/blob/21e225a06ab260551ce506e850ceab7969b219c3/docs/bifs.md" title="stylus/docs/bifs.md at 21e225a06ab260551ce506e850ceab7969b219c3 · LearnBoost/stylus · GitHub">stylus/docs/bifs.md at 21e225a06ab260551ce506e850ceab7969b219c3 · LearnBoost/stylus · GitHub</a></li>
+</ul>
+
+<h2>組み込み関数 <a href="http://learnboost.github.com/stylus/docs/bifs.html">原文</a></h2>
+
+<h3>red(color)</h3>
+
+<p>与えられた<code>color</code>の赤色の値を返します。</p>
+
+<pre><code> red(#c00)
+ // =&gt; 204
+</code></pre>
+
+<h3>green(color)</h3>
+
+<p>与えられた<code>color</code>の緑色の値を返します。</p>
+
+<pre><code> green(#0c0)
+ // =&gt; 204
+</code></pre>
+
+<h3>blue(color)</h3>
+
+<p>与えられた<code>color</code>の青色の値を返します。</p>
+
+<pre><code> red(#00c)
+ // =&gt; 204
+</code></pre>
+
+<h3>alpha(color)</h3>
+
+<p>与えられた<code>color</code>のアルファ値を返します。</p>
+
+<pre><code>  alpha(#fff)
+  // =&gt; 1
+
+  alpha(rgba(0,0,0,0.3))
+  // =&gt; 0.3
+</code></pre>
+
+<h3>dark(color)</h3>
+
+<p><code>color</code>が暗色であるか判別します。</p>
+
+<pre><code>  dark(black)
+  // =&gt; true
+
+  dark(#005716)
+  // =&gt; true
+
+  dark(white)
+  // =&gt; false
+</code></pre>
+
+<h3>light(color)</h3>
+
+<p><code>color</code>が明色であるか判別します。</p>
+
+<pre><code>light(black)
+// =&gt; false
+
+light(white)
+// =&gt; true
+
+light(#00FF40)
+// =&gt; true
+</code></pre>
+
+<h3>hue(color)</h3>
+
+<p>与えられた<code>color</code>の色相を返します。</p>
+
+<pre><code>hue(hsla(50deg, 100%, 80%))
+// =&gt; 50deg
+</code></pre>
+
+<h3>saturation(color)</h3>
+
+<p>与えられた<code>color</code>の彩度を返します。</p>
+
+<pre><code>saturation(hsla(50deg, 100%, 80%))
+// =&gt; 100%
+</code></pre>
+
+<h3>lightness(color)</h3>
+
+<p>与えられた<code>color</code>の明度を返します。</p>
+
+<pre><code>lightness(hsla(50deg, 100%, 80%))
+// =&gt; 80%
+</code></pre>
+
+<h3>push(expr, args...)</h3>
+
+<p>与えられた引数<code>args</code>を<code>expr</code>の後方に追加(push)します。</p>
+
+<pre><code> nums = 1 2
+ push(nums, 3, 4, 5)
+
+ nums
+ // =&gt; 1 2 3 4 5
+</code></pre>
+
+<p><code>append()</code>にエイリアスが付けられています。</p>
+
+<h3>unshift(expr, args...)</h3>
+
+<p>与えられた引数<code>args</code>を<code>expr</code>の前方に追加(unshift)します。</p>
+
+<pre><code> nums = 4 5
+ unshift(nums, 3, 2, 1)
+
+ nums
+ // =&gt; 1 2 3 4 5
+</code></pre>
+
+<p><code>prepend()</code>にエイリアスが付けられています。</p>
+
+<h3>keys(pairs)</h3>
+
+<p>与えられたハッシュ<code>pairs</code>のキー値の集合を返します。</p>
+
+<pre><code> pairs = (one 1) (two 2) (three 3)
+ keys(pairs)
+ // =&gt; one two three
+</code></pre>
+
+<h3>values(pairs)</h3>
+
+<p>与えられたハッシュ<code>pairs</code>の値の集合を返します。</p>
+
+<pre><code> pairs = (one 1) (two 2) (three 3)
+ values(pairs)
+ // =&gt; 1 2 3
+</code></pre>
+
+<h3>typeof(node)</h3>
+
+<p><code>node</code>の種類を文字列で返します。</p>
+
+<pre><code>  type(12)
+  // =&gt; 'unit'
+
+  typeof(12)
+  // =&gt; 'unit'
+
+  typeof(#fff)
+  // =&gt; 'rgba'
+
+  type-of(#fff)
+  // =&gt; 'rgba'
+</code></pre>
+
+<p><code>type-of</code>と<code>type</code>にエイリアスが付けられています。</p>
+
+<h3>unit(unit[, type])</h3>
+
+<p><code>unit</code>の単位の文字列、または空の文字列を返します。
+また、与えられた<code>type</code>を<code>unit</code>に加えます（単位の変換は行いません）。</p>
+
+<pre><code>unit(10)
+// =&gt; ''
+
+unit(15in)
+// =&gt; 'in'
+
+unit(15%, 'px')
+// =&gt; 15px
+
+unit(15%, px)
+// =&gt; 15px
+</code></pre>
+
+<h3>match(pattern, string)</h3>
+
+<p><code>string</code>が<code>pattern</code>にマッチするかどうか判定します。</p>
+
+<pre><code>match('^foo(bar)?', foo)
+match('^foo(bar)?', foobar)
+// =&gt; true
+
+match('^foo(bar)?', 'foo')
+match('^foo(bar)?', 'foobar')
+// =&gt; true
+
+match('^foo(bar)?', 'bar')
+// =&gt; false
+</code></pre>
+
+<h3>abs(unit)</h3>
+
+<pre><code>  abs(-5px)
+  // =&gt; 5px
+
+  abs(5px)
+  // =&gt; 5px
+</code></pre>
+
+<h3>ceil(unit)</h3>
+
+<pre><code>  ceil(5.5in)
+  // =&gt; 6in
+</code></pre>
+
+<h3>floor(unit)</h3>
+
+<pre><code>  floor(5.6px)
+  // =&gt; 5px
+</code></pre>
+
+<h3>round(unit)</h3>
+
+<pre><code>  round(5.5px)
+  // =&gt; 6px
+
+  round(5.4px)
+  // =&gt; 5px
+</code></pre>
+
+<p><strong>注記:</strong> すべての四捨五入関数はオプションの<code>precision</code>引数をとります。この引数には小数点のあとに続く数字の数を指定出来ます:</p>
+
+<pre><code>  ceil(5.52px,1)
+  // =&gt; 5.6px
+
+  floor(5.57px,1)
+  // =&gt; 5.5px
+
+  round(5.52px,1)
+  // =&gt; 5.5px
+</code></pre>
+
+<h3>min(a, b)</h3>
+
+<pre><code>  min(1, 5)
+  // =&gt; 1
+</code></pre>
+
+<h3>max(a, b)</h3>
+
+<pre><code>  max(1, 5)
+  // =&gt; 5
+</code></pre>
+
+<h3>even(unit)</h3>
+
+<pre><code>  even(6px)
+  // =&gt; true
+</code></pre>
+
+<h3>odd(unit)</h3>
+
+<pre><code>  odd(5mm)
+  // =&gt; true
+</code></pre>
+
+<h3>sum(nums)</h3>
+
+<pre><code>  sum(1 2 3)
+  // =&gt; 6
+</code></pre>
+
+<h3>avg(nums)</h3>
+
+<pre><code> avg(1 2 3)
+ // =&gt; 2
+</code></pre>
+
+<h3>join(delim, vals...)</h3>
+
+<p>与えられた<code>vals</code>を<code>delim</code>で結合します。</p>
+
+<pre><code>  join(' ', 1 2 3)
+  // =&gt; "1 2 3"
+
+  join(',', 1 2 3)
+  // =&gt; "1,2,3"
+
+  join(', ', foo bar baz)
+  // =&gt; "foo, bar, baz"
+
+  join(', ', foo, bar, baz)
+  // =&gt; "foo, bar, baz"
+
+  join(', ', 1 2, 3 4, 5 6)
+  // =&gt; "1 2, 3 4, 5 6"
+</code></pre>
+
+<h3>hsla(color | h,s,l,a)</h3>
+
+<p>与えられた<code>color</code>、またはh,s,l,aの成分を<code>HSLA</code>ノードに変換します。</p>
+
+<pre><code> hsla(10deg, 50%, 30%, 0.5)
+ // =&gt; HSLA
+
+ hsla(#ffcc00)
+ // =&gt; HSLA
+</code></pre>
+
+<h3>hsl(color | h,s,l)</h3>
+
+<p>与えられた<code>color</code>、またはh,s,lの成分を<code>HSLA</code>ノードに変換します。</p>
+
+<pre><code> hsl(10, 50, 30)
+ // =&gt; HSLA
+
+ hsl(#ffcc00)
+ // =&gt; HSLA
+</code></pre>
+
+<h3>rgba(color | r,g,b,a)</h3>
+
+<p>r,g,b,aの各成分からRGBAを返します。または、<code>color</code>のアルファ値を調整したものを返します。</p>
+
+<pre><code>  rgba(255,0,0,0.5)
+  // =&gt; rgba(255,0,0,0.5)
+
+  rgba(255,0,0,1)
+  // =&gt; #ff0000
+
+  rgba(#ffcc00, 0.5)
+  // rgba(255,204,0,0.5)
+</code></pre>
+
+<p>また、Stylusでは<code>#rgba</code>と<code>#rrggbbaa</code>の記法もサポートされています。</p>
+
+<pre><code>#fc08
+// =&gt; rgba(255,204,0,0.5)
+
+#ffcc00ee
+// =&gt; rgba(255,204,0,0.9)
+</code></pre>
+
+<h3>rgb(color | r,g,b)</h3>
+
+<p>r,g,bの成分から<code>RGBA</code>を返します。または<code>RGBA</code>に変換します。</p>
+
+<pre><code>rgb(255,204,0)
+// =&gt; #ffcc00
+
+rgb(#fff)
+// =&gt; #fff
+</code></pre>
+
+<h3>lighten(color, amount)</h3>
+
+<p>与えられた<code>color</code>を<code>amount</code>に従って明るくします。この関数は単位を判別します。次は、パーセンテージを用いた例になります。</p>
+
+<pre><code>lighten(#2c2c2c, 30)
+// =&gt; #787878
+
+lighten(#2c2c2c, 30%)
+// =&gt; #393939
+</code></pre>
+
+<h3>darken(color, amount)</h3>
+
+<p>与えられた<code>color</code>を<code>amount</code>に従って暗くします。この関数は単位を判別します。次は、パーセンテージを用いた例になります。</p>
+
+<pre><code>darken(#D62828, 30)
+// =&gt; #551010
+
+darken(#D62828, 30%)
+// =&gt; #961c1c
+</code></pre>
+
+<h3>desaturate(color, amount)</h3>
+
+<p>与えられた<code>color</code>の彩度を<code>amount</code>に従って低くします。</p>
+
+<pre><code>desaturate(#f00, 40%)
+// =&gt; #c33
+</code></pre>
+
+<h3>saturate(color, amount)</h3>
+
+<p>与えられた<code>color</code>の彩度を<code>amount</code>に従って高くします。</p>
+
+<pre><code>saturate(#c33, 40%)
+// =&gt; #f00
+</code></pre>
+
+<h3>invert(color)</h3>
+
+<p>色を反転します。赤、緑、青の値は反転されますが、アルファ値は変わりません。</p>
+
+<pre><code>invert(#d62828)
+// =&gt; #29d7d7
+</code></pre>
+
+<h3>unquote(str | ident)</h3>
+
+<p>与えられた<code>str</code>のクォートを外して<code>Literal</code>ノードを返します。</p>
+
+<pre><code>   unquote("sans-serif")
+   // =&gt; sans-serif
+
+   unquote(sans-serif)
+   // =&gt; sans-serif
+
+   unquote('1px / 2px')
+   // =&gt; 1px / 2px
+</code></pre>
+
+<h3>s(fmt, ...)</h3>
+
+<p><code>s()</code>関数は<code>Literal</code>ノードを返す点で<code>unquote()</code>に似ていますが、C言語の<code>sprintf()</code>のようにフォーマット文字列を受け取ることができます。現状では<code>%s</code>指定子のみがサポートされています。</p>
+
+<pre><code>    s('bar()');
+    // =&gt; bar()
+
+    s('bar(%s)', 'baz');
+    // =&gt; bar("baz")
+
+    s('bar(%s)', baz);
+    // =&gt; bar(baz)
+
+    s('bar(%s)', 15px);
+    // =&gt; bar(15px)
+
+    s('rgba(%s, %s, %s, 0.5)', 255, 100, 50);
+    // =&gt; rgba(255, 100, 50, 0.5)
+
+    s('bar(%Z)', 15px);
+    // =&gt; bar(%Z)
+
+    s('bar(%s, %s)', 15px);
+    // =&gt; bar(15px, null)
+</code></pre>
+
+<p>文字列演算子<code>%</code>も同様の効果を得るために利用できます。</p>
+
+<h3>operate(op, left, right)</h3>
+
+<p>与えられた<code>op</code>を<code>left</code>と<code>right</code>のオペランドに適用します:</p>
+
+<pre><code>  op = '+'
+  operate(op, 15, 5)
+  // =&gt; 20
+</code></pre>
+
+<h3>length([expr])</h3>
+
+<p>括弧に囲まれた式はタプルとして認識されます。<code>length()</code>関数はそのような式の長さを返します。</p>
+
+<pre><code>length((1 2 3 4))
+// =&gt; 4
+
+length((1 2))
+// =&gt; 2
+
+length((1))
+// =&gt; 1
+
+length(())
+// =&gt; 0
+
+length(1 2 3)
+// =&gt; 3
+
+length(1)
+// =&gt; 1
+
+length()
+// =&gt; 0
+</code></pre>
+
+<h3>warn(msg)</h3>
+
+<p>与えられたエラー<code>msg</code>を警告します。これは、Stylusのコンパイルを中止しません。</p>
+
+<pre><code>  warn("oh noes!")
+</code></pre>
+
+<h3>error(msg)</h3>
+
+<p>与えられたエラー<code>msg</code>を発し、Stylusのコンパイルを中止します。</p>
+
+<pre><code>add(a, b)
+  unless a is a 'unit' and b is a 'unit'
+    error('add() expects units')
+  a + b
+</code></pre>
+
+<h3>last(expr)</h3>
+
+<p>与えられた<code>expr</code>のなかの <em>最後</em> の値を返します:</p>
+
+<pre><code>  nums = 1 2 3
+  last(nums)
+  last(1 2 3)
+  // =&gt; 3
+
+  list = (one 1) (two 2) (three 3)
+  last(list)
+  // =&gt; (three 3)
+</code></pre>
+
+<h3>p(expr)</h3>
+
+<p>与えられた<code>expr</code>の詳細を調べます:</p>
+
+<pre><code> fonts = Arial, sans-serif
+ p('test')
+ p(123)
+ p((1 2 3))
+ p(fonts)
+ p(#fff)
+ p(rgba(0,0,0,0.2))
+
+ add(a, b)
+   a + b
+
+ p(add)
+</code></pre>
+
+<p>標準出力:</p>
+
+<pre><code> inspect: "test"
+ inspect: 123
+ inspect: 1 2 3
+ inspect: Arial, sans-serif
+ inspect: #fff
+ inspect: rgba(0,0,0,0.2)
+ inspect: add(a, b)
+</code></pre>
+
+<h3>opposite-position(positions)</h3>
+
+<p>与えられた<code>positions</code>の逆のものを返します。</p>
+
+<pre><code> opposite-position(right)
+ // =&gt; left
+
+ opposite-position(top left)
+ // =&gt; bottom right
+
+ opposite-position('top' 'left')
+ // =&gt; bottom right
+</code></pre>
+
+<h3>image-size(path)</h3>
+
+<p><code>path</code>に見つかった画像の<code>width</code>と<code>height</code>を返します。画像ファイルの探索は<code>@import</code>と同様に行われます。これは、設定<code>paths</code>で変更できます。</p>
+
+<pre><code>  width(img)
+    return image-size(img)[0]
+
+  height(img)
+    return image-size(img)[1]
+
+  image-size('tux.png')
+  // =&gt; 405px 250px
+
+  image-size('tux.png')[0] == width('tux.png')
+  // =&gt; true
+</code></pre>
+
+<h3>add-property(name, expr)</h3>
+
+<p>呼び出し箇所に最も近いブロックに、プロパティ<code>name</code>を<code>expr</code>の値で追加します。</p>
+
+<p>例:</p>
+
+<pre><code>  something()
+    add-property('bar', 1 2 3)
+    s('bar')
+
+  body
+    foo: something()
+</code></pre>
+
+<p>これは次のように展開されます:</p>
+
+<pre><code>  body {
+    bar: 1 2 3;
+    foo: bar;
+  }
+</code></pre>
+
+<p>次に"魔法の"<code>current-property</code>ローカル変数を見てみましょう。この変数は関数定義の中で準備なく利用可能で、現在のプロパティの名前と値を持っています。</p>
+
+<p>例えば、<code>p()</code>関数を使ってこの変数をインスペクトしてみると、次のようになります。</p>
+
+<pre><code>    p(current-property)
+    // =&gt; "foo" (foo __CALL__ bar baz)
+
+    p(current-property[0])
+    // =&gt; "foo"
+
+    p(current-property[1])
+    // =&gt; foo __CALL__ bar baz
+</code></pre>
+
+<p><code>current-preperty</code>を用いてもう少し高度な例を見ていきましょう。プロパティを複製し、別の値を持つようにします。また、関数がプロパティの値の箇所で用いられていることを確実にするために条件文を付け足します。</p>
+
+<pre><code>    something(n)
+      if current-property
+        add-property(current-property[0], s('-webkit-something(%s)', n))
+        add-property(current-property[0], s('-moz-something(%s)', n))
+        s('something(%s)', n)
+      else
+        error('something() must be used within a property')
+
+    body {
+      foo: something(15px) bar;
+    }
+</code></pre>
+
+<p>これは次のように展開されます:</p>
+
+<pre><code>    body {
+      foo: -webkit-something(15px);
+      foo: -moz-something(15px);
+      foo: something(15px) bar;
+    }
+</code></pre>
+
+<p>上の例でお気づきかもしれませんが、<code>bar</code>は<code>something(15px)</code>を返したあとにしか存在していません。<code>bar</code>はこの式の中では元の位置のままですが、他の式では考慮に入れられていません。</p>
+
+<p>この更に良い解決策が次になります。まず、<code>replace()</code>という関数を定義します。この関数の中では、式の変更を防ぐためにまず式を複製し、複製された式の中の文字列を与えられた文字列で置き換え、複製された式を返すという事を行なっています。式の中の<code>__CALL__</code>が置き換えられていますが、これは<code>something()</code>の循環的な呼び出しを表しています。</p>
+
+<pre><code>    replace(expr, str, val)
+      expr = clone(expr)
+      for e, i in expr
+        if str == e
+          expr[i] = val
+      expr
+
+    something(n)
+      if current-property
+        val = current-property[1]
+        webkit = replace(val, '__CALL__', s('-webkit-something(%s)', n))
+        moz = replace(val, '__CALL__', s('-moz-something(%s)', n))
+        add-property(current-property[0], webkit)
+        add-property(current-property[0], moz)
+        s('something(%s)', n)
+      else
+        error('something() must be used within a property')
+</code></pre>
+
+<p>これは次のように展開されます:</p>
+
+<pre><code>      body {
+        foo: foo -webkit-something(5px) bar baz;
+        foo: foo -moz-something(5px) bar baz;
+        foo: foo something(5px) bar baz;
+      }
+</code></pre>
+
+<p>これで、関数がコールされるプロパティとプロパティの中での位置の点で透過的に動作できる関数が定義されました。この強力な仕組みのおかげでグラデーションなどのベンダープレフィックスを意識せずに利用することが容易になります。</p>
+
+<h3>未定義の関数</h3>
+
+<p>未定義の関数はリテラルとして出力されます。例として<code>rgba-stop(50%, #fff)</code>をcssの中で呼び出すことを考えてみましょう。これは期待通りに出力されます。ヘルパーの中でも同様に用いることができます。</p>
+
+<p>次の例ではシンプルな<code>stop()</code>関数を定義します。この関数はリテラルの<code>rgba-stop()</code>関数コールを返します。</p>
+
+<pre><code>stop(pos, rgba)
+  rgba-stop(pos, rgba)
+
+stop(50%, orange)
+// =&gt; rgba-stop(50%, #ffa500)
+</code></pre>
+</div></div></body></html>

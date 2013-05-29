@@ -1,0 +1,529 @@
+<!DOCTYPE html><html><head><title>Stylus</title><link rel="stylesheet" href="../main.css"><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></head><body><div id="container"><h1><a href='http://learnboost.github.com/stylus'>Stylus</a></h1><p class="tagline"><em class="expressive">Expressive, </em><em class="dynamic">dynamic, </em><em class="robust">robust </em><em class="css">CSS</em></p><div id="ribbon"><a href="http://github.com/learnboost/stylus">Fork me on GitHub</a></div><ul id="menu"><li><a href="../docs/selectors.html">Selectors</a></li><li><a href="../docs/variables.html">Variables</a></li><li><a href="../docs/interpolation.html">Interpolation</a></li><li><a href="../docs/operators.html">Operators</a></li><li><a href="../docs/mixins.html">Mixins</a></li><li><a href="../docs/functions.html">Functions</a></li><li><a href="../docs/kwargs.html">Keyword Arguments</a></li><li><a href="../docs/bifs.html">Built-in Functions</a></li><li><a href="../docs/vargs.html">Rest Params</a></li><li><a href="../docs/comments.html">Comments</a></li><li><a href="../docs/conditionals.html">Conditionals</a></li><li><a href="../docs/iteration.html">Iteration</a></li><li><a href="../docs/import.html">@import</a></li><li><a href="../docs/media.html">@media</a></li><li><a href="../docs/font-face.html">@font-face</a></li><li><a href="../docs/keyframes.html">@keyframes</a><li><a href="../docs/extend.html">@extend</a></li><li><a href="../docs/functions.url.html">url()</a></li><li><a href="../docs/literal.html">CSS Literal</a></li><li><a href="../docs/css-style.html">CSS Style Syntax</a></li><li><a href="../docs/escape.html">Char Escaping</a></li><li><a href="../docs/executable.html">Executable</a></li><li><a href="../docs/error-reporting.html">Error Reporting</a></li><li><a href="../docs/middleware.html">Connect Middleware</a></li><li><a href="../docs/introspection.html">Introspection API</a></li><li><a href="../docs/js.html">JavaScript API</a></li>
+  <li><a href="http://github.com/visionmedia/nib">CSS3 Extensions with Nib</a></li>
+  <li><a href="../try.html">Try Stylus Online!</a></li>
+  </ul><div id="content"><ul>
+<li>元文書: [stylus/docs/operators.md at f9ed220d7e5f0b44aeaca58ffd6490566b5f0757 · LearnBoost/stylus · GitHub]
+(https://github.com/LearnBoost/stylus/blob/f9ed220d7e5f0b44aeaca58ffd6490566b5f0757/docs/operators.md 
+"stylus/docs/operators.md at f9ed220d7e5f0b44aeaca58ffd6490566b5f0757 · LearnBoost/stylus · GitHub")</li>
+</ul>
+
+<h2>演算子の優先順位 <a href="http://learnboost.github.com/stylus/docs/operators.html">原文</a></h2>
+
+<p>下は演算子を優先順位の高いものから並べた表です。</p>
+
+<pre><code> []
+ ! ~ + -
+ is defined
+ ** * / %
+ + -
+ ... ..
+ &lt;= &gt;= &lt; &gt;
+ in
+ == is != is not isnt
+ is a
+ &amp;&amp; and || or
+ ?:
+ = := ?= += -= *= /= %=
+ not
+ if unless
+</code></pre>
+
+<h2>単項演算子</h2>
+
+<p>次の単項演算子が利用できます。 <code>!</code>, <code>not</code>, <code>-</code>, <code>+</code>, <code>~</code></p>
+
+<pre><code>!0
+// =&gt; true
+
+!!0
+// =&gt; false
+
+!1
+// =&gt; false
+
+!!5px
+// =&gt; true
+
+-5px
+// =&gt; -5px
+
+--5px
+// =&gt; 5px
+
+not true
+// =&gt; false
+
+not not true
+// =&gt; true
+</code></pre>
+
+<p><code>not</code> 論理演算子は優先度が低いため、次の例は置き換えることができます。</p>
+
+<pre><code>a = 0
+b = 1
+
+!a and !b
+// =&gt; false
+// pased as: (!a) and (!b)
+// このように評価される: (!a) and (!b)
+</code></pre>
+
+<p>置き換え後:</p>
+
+<pre><code>not a or b
+// =&gt; false
+// parsed as: not (a or b)
+// このように評価される: not (a or b)
+</code></pre>
+
+<h2>バイナリ演算子</h2>
+
+<h3>記号 []()</h3>
+
+<p>記号（<code>[]</code>）は、インデックス経由で式の中の値を取得することが出来ます。
+ 括弧（<code>()</code>）で囲まれた表現はタプルとして振舞います（例えば、 <code>(15px 5px)</code>, <code>(1 2 3)</code>）。 </p>
+
+<p>次は、エラーハンドリングのためにタプルを使う（そして、この構造の汎用性を紹介する）例です。</p>
+
+<pre><code> add(a, b)
+   if a is a 'unit' and b is a 'unit'
+     a + b
+   else
+     (error 'a and b must be units!')
+
+ body
+   padding add(1,'5')
+   // =&gt; padding: error "a and b must be units";
+
+   padding add(1,'5')[0]
+   // =&gt; padding: error;
+
+   padding add(1,'5')[0] == error
+   // =&gt; padding: true;
+
+   padding add(1,'5')[1]
+   // =&gt; padding: "a and b must be units";
+</code></pre>
+
+<p>これはより複雑な例です。今、ビルトイン関数の <code>error()</code> を戻ってきたエラーメッセージを引数に呼び出しています。
+ 呼び出されるたびに、 <code>error</code> と同じ文字（エラーメッセージの最初の値）をインデントしています。</p>
+
+<pre><code> if (val = add(1,'5'))[0] == error
+   error(val[1])
+</code></pre>
+
+<h2>範囲 .. ...</h2>
+
+<p>包含的（<code>..</code>）と排他的（<code>...</code>）両方の範囲記号が提供されており、次のような式に展開されます。</p>
+
+<pre><code> 1..5
+ // =&gt; 1 2 3 4 5
+
+ 1...5
+ // =&gt; 1 2 3 4
+</code></pre>
+
+<h3>加算減算: + -</h3>
+
+<p>型変換は、単位が属する分類の範囲内か初期のリテラル値が適用されます。例えば、 <code>5s - 2px</code> の結果は <code>3s</code> です。</p>
+
+<pre><code>15px - 5px
+// =&gt; 10px
+
+5 - 2
+// =&gt; 3
+
+5in - 50mm
+// =&gt; 3.031in
+
+5s - 1000ms
+// =&gt; 4s
+
+20mm + 4in
+// =&gt; 121.6mm
+
+"foo " + "bar"
+// =&gt; "foo bar"
+
+"num " + 15
+// =&gt; "num 15"
+</code></pre>
+
+<h3>乗算除算: / * %</h3>
+
+<pre><code>2000ms + (1s * 2)
+// =&gt; 4ms
+
+5s / 2
+// =&gt; 2.5s
+
+4 % 2
+// =&gt; 0
+</code></pre>
+
+<p>もし、<code>/</code> をプロパティ値の中で使う場合、 <strong>必ず</strong> 括弧で囲まなければなりません。
+そうしなければ、 <code>/</code> は文字通りに解釈されます（これはCSSが<code>line-height</code> をサポートするためです）。</p>
+
+<pre><code>font: 14px/1.5;
+</code></pre>
+
+<p>しかし、次のよう評価されます。<code>14px</code> ÷ <code>1.5</code>:</p>
+
+<pre><code>font: (14px/1.5);
+</code></pre>
+
+<p>これは、 <code>/</code> 演算子 <em>のみ</em> に必要なことです。</p>
+
+<h3>指数: **</h3>
+
+<p>指数演算子:</p>
+
+<pre><code>2 ** 8
+// =&gt; 256
+</code></pre>
+
+<h3>等価演算子と関係（比較）演算子: == != >= &lt;= > &lt;</h3>
+
+<p>等価演算子は色や文字列や識別子でさえ、同一視するものに使用できます。
+これは任意の識別子（ <code>wahoo</code> などなど）を比較対象（原文:atoms アトム）として利用することができる、強力な概念です。
+関数も <code>true</code> か <code>false</code> の代わりに <code>yes</code> か <code>no</code> を返すことができました（これは、あまりお勧めしませんが）。</p>
+
+<pre><code>5 == 5
+// =&gt; true
+
+10 &gt; 5
+// =&gt; true
+
+#fff == #fff
+// =&gt; true
+
+true == false
+// =&gt; false
+
+wahoo == yay
+// =&gt; false
+
+wahoo == wahoo
+// =&gt; true
+
+"test" == "test"
+// =&gt; true
+
+true is true
+// =&gt; true
+
+'hey' is not 'bye'
+// =&gt; true
+
+'hey' isnt 'bye'
+// =&gt; true
+
+(foo bar) == (foo bar)
+// =&gt; true
+
+(1 2 3) == (1 2 3)
+// =&gt; true
+
+(1 2 3) == (1 1 3)
+// =&gt; false
+</code></pre>
+
+<p>正確な値のみがマッチします。例えば <code>0 == false</code> と<code>null == false</code> は両方 <code>false</code> です。</p>
+
+<p>エイリアス:</p>
+
+<pre><code>==    is
+!=    is not
+!=    isnt
+</code></pre>
+
+<h2>真偽</h2>
+
+<p>Stylusではほぼすべての単位は接尾語を持つ単位すら、 true として解釈されます。
+ <code>0%</code>, <code>0px</code>, などでさえも <code>true</code> として解釈されます。
+ （なぜなら、Stylusではmixinsやfunctionsのため、これらを有効な単位として受け入れることが一般的であるためです。）</p>
+
+<p>しかし、<code>0</code> 自体は算術の観点から <code>false</code> です。</p>
+
+<p>lengthが1より大きい値を持つ式（またはリスト）はtrueと見なされます。</p>
+
+<p><code>true</code> の例:</p>
+
+<pre><code>  0% 
+  0px
+  1px 
+  -1
+  -1px
+  hey
+  'hey'
+  (0 0 0)
+  ('' '')
+</code></pre>
+
+<p><code>false</code> の例:</p>
+
+<pre><code> 0 
+ null
+ false
+ ''
+</code></pre>
+
+<h3>論理演算子: &amp;&amp; || and or</h3>
+
+<p>論理演算子の <code>&amp;&amp;</code> と <code>||</code> は<code>and</code> / <code>or</code> と同じ優先順位が適用されるエイリアスです。</p>
+
+<pre><code>5 &amp;&amp; 3
+// =&gt; 3
+
+0 || 5
+// =&gt; 5
+
+0 &amp;&amp; 5
+// =&gt; 0
+
+#fff is a 'rgba' and 15 is a 'unit'
+// =&gt; true
+</code></pre>
+
+<h3>存在演算子: in</h3>
+
+<p><em>右辺</em> の式の中に、 <em>左辺</em> のオペランドが存在することをチェックします。</p>
+
+<p>単純な例:</p>
+
+<pre><code>  nums = 1 2 3
+  1 in nums
+  // =&gt; true
+
+  5 in nums
+  // =&gt; false
+</code></pre>
+
+<p>いくつかの未定義な識別子の例:</p>
+
+<pre><code>  words = foo bar baz
+  bar in words
+  // =&gt; true
+
+  HEY in words
+  // =&gt; false
+</code></pre>
+
+<p>タプルでの動作の例:</p>
+
+<pre><code>  vals = (error 'one') (error 'two')
+  error in vals
+  // =&gt; false
+
+  (error 'one') in vals
+  // =&gt; true
+
+  (error 'two') in vals
+  // =&gt; true
+
+  (error 'something') in vals
+  // =&gt; false
+</code></pre>
+
+<p>mixinでの使用例:</p>
+
+<pre><code>  pad(types = padding, n = 5px)
+    if padding in types
+      padding n
+    if margin in types
+      margin n
+
+  body
+    pad()
+
+  body
+    pad(margin)
+
+  body
+    pad(padding margin, 10px)
+</code></pre>
+
+<p>結果:</p>
+
+<pre><code>  body {
+    padding: 5px;
+  }
+  body {
+    margin: 5px;
+  }
+  body {
+    padding: 10px;
+    margin: 10px;
+  }
+</code></pre>
+
+<h3>条件付き代入: ?= :=</h3>
+
+<p>条件付き代入演算子 <code>?=</code> （<code>:=</code>）は、（もし存在する場合）古い値を上書きして破壊することなしに、変数を定義することができます。
+この演算子は三項演算子の中の <code>is defined</code> バイナリ演算子として展開されます。</p>
+
+<p>以下の例は等価です。:</p>
+
+<pre><code>color := white
+color ?= white
+color = color is defined ? color : white
+</code></pre>
+
+<p><code>=</code> を使った場合、簡単に再割り当てできます。</p>
+
+<pre><code>color = white
+color = black
+
+color
+// =&gt; black
+</code></pre>
+
+<p>しかし、<code>?=</code>を使った場合、（下の例の）2行目の試みは（既に変数が定義されているため）失敗します。</p>
+
+<pre><code>color = white
+color ?= black
+
+color
+// =&gt; white
+</code></pre>
+
+<h3>インスタンスチェック: is a</h3>
+
+<p>Stylusはタイプチェックのため、 <code>is a</code> という名前のバイナリ演算子を提供します。</p>
+
+<pre><code>15 is a 'unit'
+// =&gt; true
+
+#fff is a 'rgba'
+// =&gt; true
+
+15 is a 'rgba'
+// =&gt; false
+</code></pre>
+
+<p>代わりに、<code>type()</code> BIF（Built in Function　組み込み関数）を利用することもできます。</p>
+
+<pre><code>type(#fff) == 'rgba'
+// =&gt; true
+</code></pre>
+
+<p><strong>注意:</strong> <code>color</code> は左辺のオペランドが <code>RGBA</code> や <code>HSLA</code> ノードである場合に <code>true</code> と評価される、唯一の特殊なケースです。</p>
+
+<h3>変数定義: is defined</h3>
+
+<p>この擬似バイナリ演算子は右辺の演算子を必要としません。
+また、左辺も評価 <em>しません。</em>　
+これは、変数が割り当てられた値を持っている場合のみ、チェックすることが出来ます。</p>
+
+<pre><code>foo is defined
+// =&gt; false
+
+foo = 15px
+foo is defined
+// =&gt; true
+
+#fff is defined
+// =&gt; 'invalid "is defined" check on non-variable #fff'
+</code></pre>
+
+<p>代わりに、組み込み関数 <code>lookup(name)</code> を使ってこれを行うことが出来ます。または動的な探索を行うことでも可能です。</p>
+
+<pre><code>name = 'blue'
+lookup('light-' + name)
+// =&gt; null
+
+light-blue = #80e2e9
+lookup('light-' + name)
+// =&gt; #80e2e9
+</code></pre>
+
+<p>例えば次のように、未定義の識別子がtrueの値を持っているため、この演算子は必要不可欠です。</p>
+
+<pre><code>body
+  if ohnoes
+    padding 5px
+</code></pre>
+
+<p>未定義の場合、次のCSSが得られる <em>でしょう</em> 。</p>
+
+<pre><code>body {
+  padding: 5px;
+}
+</code></pre>
+
+<p>しかし、以下の場合は期待通りに振る舞います。</p>
+
+<pre><code>body
+  if ohnoes is defined
+    padding 5px
+</code></pre>
+
+<h2>三項演算子</h2>
+
+<p>他のほとんどの言語にて期待するように三項演算子も動作します。
+これは3つのオペランド（ <em>条件</em> 式、 <em>真</em> 式、 <em>偽</em> 式）を持つ唯一の演算子です。</p>
+
+<pre><code>num = 15
+num ? unit(num, 'px') : 20px
+// =&gt; 15px
+</code></pre>
+
+<h2>キャスト</h2>
+
+<p><code>unit()</code>組み込み関数の簡素な代替として、接尾語を強要するために<code>(式) 単位</code>構文が使用されるかもしれません。</p>
+
+<pre><code>body
+  n = 5
+  foo: (n)em
+  foo: (n)%
+  foo: (n + 5)%
+  foo: (n * 5)px
+  foo: unit(n + 5, '%')
+  foo: unit(5 + 180 / 2, deg)
+</code></pre>
+
+<h2>色操作</h2>
+
+<p>色に対する操作は、コンポーネントを変更する簡素な表現方法として提供します。例えば、各RGBごとに操作することができます。</p>
+
+<pre><code>#0e0 + #0e0
+// =&gt; #0f0
+</code></pre>
+
+<p>もうひとつの例は、パーセンテージで加算・減算することによって明るさの値を調整することです。色を明るくするには加算します。また、暗くするには減算します。</p>
+
+<pre><code>#888 + 50%
+// =&gt; #c3c3c3
+
+#888 - 50%
+// =&gt; #444
+</code></pre>
+
+<p>度数を加算・減算することによって色相を調整することが可能です。例えば、 赤色に <code>50deg</code> を加算した結果は黄色になります。</p>
+
+<pre><code> #f00 + 50deg
+ // =&gt; #ffd500
+</code></pre>
+
+<p>値は適切な値に固定されます。例えば、現在の値が<code>320deg</code> の場合であっても、色相を180度 "回転" させることができます。それは<code>140deg</code> として解釈されるでしょう。</p>
+
+<p>また、<code>rgb()</code>, <code>rgba()</code>, <code>hsl()</code>, <code>hsla()</code> を使用した場合、一度に複数の値を微調整することができます。</p>
+
+<pre><code>  #f00 - rgba(100,0,0,0.5)
+  // =&gt; rgba(155,0,0,0.5)
+</code></pre>
+
+<h2>Sprintf関数</h2>
+
+<p>リテラル値を生成するために、内部の<code>s()</code> ビルトイン関数を通して引数を渡す、文字列のsprintf関数のような <code>%</code> 演算子を使用することが出来ます。 </p>
+
+<pre><code>   'X::Microsoft::Crap(%s)' % #fc0
+   // =&gt; X::Microsoft::Crap(#fc0)
+</code></pre>
+
+<p>複数の値は括弧で囲む必要があります。</p>
+
+<pre><code>  '-webkit-gradient(%s, %s, %s)' % (linear (0 0) (0 100%))
+  // =&gt; -webkit-gradient(linear, 0 0, 0 100%)
+</code></pre>
+</div></div></body></html>

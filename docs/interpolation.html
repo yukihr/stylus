@@ -1,0 +1,68 @@
+<!DOCTYPE html><html><head><title>Stylus</title><link rel="stylesheet" href="../main.css"><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></head><body><div id="container"><h1><a href='http://learnboost.github.com/stylus'>Stylus</a></h1><p class="tagline"><em class="expressive">Expressive, </em><em class="dynamic">dynamic, </em><em class="robust">robust </em><em class="css">CSS</em></p><div id="ribbon"><a href="http://github.com/learnboost/stylus">Fork me on GitHub</a></div><ul id="menu"><li><a href="../docs/selectors.html">Selectors</a></li><li><a href="../docs/variables.html">Variables</a></li><li><a href="../docs/interpolation.html">Interpolation</a></li><li><a href="../docs/operators.html">Operators</a></li><li><a href="../docs/mixins.html">Mixins</a></li><li><a href="../docs/functions.html">Functions</a></li><li><a href="../docs/kwargs.html">Keyword Arguments</a></li><li><a href="../docs/bifs.html">Built-in Functions</a></li><li><a href="../docs/vargs.html">Rest Params</a></li><li><a href="../docs/comments.html">Comments</a></li><li><a href="../docs/conditionals.html">Conditionals</a></li><li><a href="../docs/iteration.html">Iteration</a></li><li><a href="../docs/import.html">@import</a></li><li><a href="../docs/media.html">@media</a></li><li><a href="../docs/font-face.html">@font-face</a></li><li><a href="../docs/keyframes.html">@keyframes</a><li><a href="../docs/extend.html">@extend</a></li><li><a href="../docs/functions.url.html">url()</a></li><li><a href="../docs/literal.html">CSS Literal</a></li><li><a href="../docs/css-style.html">CSS Style Syntax</a></li><li><a href="../docs/escape.html">Char Escaping</a></li><li><a href="../docs/executable.html">Executable</a></li><li><a href="../docs/error-reporting.html">Error Reporting</a></li><li><a href="../docs/middleware.html">Connect Middleware</a></li><li><a href="../docs/introspection.html">Introspection API</a></li><li><a href="../docs/js.html">JavaScript API</a></li>
+  <li><a href="http://github.com/visionmedia/nib">CSS3 Extensions with Nib</a></li>
+  <li><a href="../try.html">Try Stylus Online!</a></li>
+  </ul><div id="content"><ul>
+<li>元文書: [stylus/docs/interpolation.md at f9ed220d7e5f0b44aeaca58ffd6490566b5f0757 · LearnBoost/stylus · GitHub]
+(https://github.com/LearnBoost/stylus/blob/f9ed220d7e5f0b44aeaca58ffd6490566b5f0757/docs/interpolation.md 
+"stylus/docs/interpolation.md at f9ed220d7e5f0b44aeaca58ffd6490566b5f0757 · LearnBoost/stylus · GitHub")</li>
+</ul>
+
+<h2>補間 <a href="http://learnboost.github.com/stylus/docs/interpolation.html">原文</a></h2>
+
+<p>Stylusは、次に識別子の一部となる式を <code>{}</code> 文字で囲むことで補間をサポートします。例えば <code>-webkit-{'border' + '-radius'}</code> は <code>-webkit-border-radius</code> として評価されます。</p>
+
+<p>良い使い方の例は、プロパティにベンダープレフィックを付けて展開する場合です。</p>
+
+<pre><code>  vendor(prop, args)
+    -webkit-{prop} args
+    -moz-{prop} args
+    {prop} args
+
+  border-radius()
+    vendor('border-radius', arguments)
+
+  box-shadow()
+    vendor('box-shadow', arguments)
+
+  button
+    border-radius 1px 2px / 3px 4px
+</code></pre>
+
+<p>結果:</p>
+
+<pre><code>  button {
+    -webkit-border-radius: 1px 2px / 3px 4px;
+    -moz-border-radius: 1px 2px / 3px 4px;
+    border-radius: 1px 2px / 3px 4px;
+  }
+</code></pre>
+
+<h2>セレクタ補間</h2>
+
+<p>補間はセレクタにも同様に対応しています。例えば以下のように、テーブルの最初の5行に <code>height</code> プロパティを割り当てるため、イテレート（反復）することがあります。</p>
+
+<pre><code>table
+  for row in 1 2 3 4 5
+    tr:nth-child({row})
+      height: 10px * row
+</code></pre>
+
+<p>結果:</p>
+
+<pre><code>table tr:nth-child(1) {
+  height: 10px;
+}
+table tr:nth-child(2) {
+  height: 20px;
+}
+table tr:nth-child(3) {
+  height: 30px;
+}
+table tr:nth-child(4) {
+  height: 40px;
+}
+table tr:nth-child(5) {
+  height: 50px;
+}
+</code></pre>
+</div></div></body></html>

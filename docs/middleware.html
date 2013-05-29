@@ -1,0 +1,79 @@
+<!DOCTYPE html><html><head><title>Stylus</title><link rel="stylesheet" href="../main.css"><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></head><body><div id="container"><h1><a href='http://learnboost.github.com/stylus'>Stylus</a></h1><p class="tagline"><em class="expressive">Expressive, </em><em class="dynamic">dynamic, </em><em class="robust">robust </em><em class="css">CSS</em></p><div id="ribbon"><a href="http://github.com/learnboost/stylus">Fork me on GitHub</a></div><ul id="menu"><li><a href="../docs/selectors.html">Selectors</a></li><li><a href="../docs/variables.html">Variables</a></li><li><a href="../docs/interpolation.html">Interpolation</a></li><li><a href="../docs/operators.html">Operators</a></li><li><a href="../docs/mixins.html">Mixins</a></li><li><a href="../docs/functions.html">Functions</a></li><li><a href="../docs/kwargs.html">Keyword Arguments</a></li><li><a href="../docs/bifs.html">Built-in Functions</a></li><li><a href="../docs/vargs.html">Rest Params</a></li><li><a href="../docs/comments.html">Comments</a></li><li><a href="../docs/conditionals.html">Conditionals</a></li><li><a href="../docs/iteration.html">Iteration</a></li><li><a href="../docs/import.html">@import</a></li><li><a href="../docs/media.html">@media</a></li><li><a href="../docs/font-face.html">@font-face</a></li><li><a href="../docs/keyframes.html">@keyframes</a><li><a href="../docs/extend.html">@extend</a></li><li><a href="../docs/functions.url.html">url()</a></li><li><a href="../docs/literal.html">CSS Literal</a></li><li><a href="../docs/css-style.html">CSS Style Syntax</a></li><li><a href="../docs/escape.html">Char Escaping</a></li><li><a href="../docs/executable.html">Executable</a></li><li><a href="../docs/error-reporting.html">Error Reporting</a></li><li><a href="../docs/middleware.html">Connect Middleware</a></li><li><a href="../docs/introspection.html">Introspection API</a></li><li><a href="../docs/js.html">JavaScript API</a></li>
+  <li><a href="http://github.com/visionmedia/nib">CSS3 Extensions with Nib</a></li>
+  <li><a href="../try.html">Try Stylus Online!</a></li>
+  </ul><div id="content"><ul>
+<li>元文書: <a href="https://github.com/LearnBoost/stylus/blob/0a3a8add79880b5f96ef680ea8f30786c17c3233/docs/middleware.md" title="stylus/docs/middleware.md at 0a3a8add79880b5f96ef680ea8f30786c17c3233 · LearnBoost/stylus · GitHub">stylus/docs/middleware.md at 0a3a8add79880b5f96ef680ea8f30786c17c3233 · LearnBoost/stylus · GitHub</a></li>
+</ul>
+
+<h2>Connect ミドルウェア <a href="http://learnboost.github.com/stylus/docs/middleware.html">原文</a></h2>
+
+<p>Stylusはファイル変更を検知して自動でコンパイルできる、Connectミドルウェアを備えています。</p>
+
+<h2>stylus.middleware(options)</h2>
+
+<p>与えられた<code>options</code>で初期化された、Connectミドルウェアを返します。</p>
+
+<h4>オプション(options)</h4>
+
+<pre><code>  `force`     __true__ の場合、常にコンパイルし直します
+  `src`       .stylファイルを検索するソースディレクトリです
+  `dest`      .cssファイルを出力するためのディレクトリです
+              undefined の場合は`src`の設定値が使われます
+  `compress`  出力の.cssファイルを圧縮するかどうかを指定します
+  `compile`   カスタムのコンパイル関数です。引数、`(str, path)`を受け取り、
+              レンダラを返します。
+  `firebug`   出力CSSにデバッグ情報を付加します。
+              この情報はFireStylus Firebugプラグインで利用できます。
+  `linenos`   出力CSSに、対応するStylusファイルの行番号を示す
+              コメントを付加します。
+</code></pre>
+
+<h4>使用例</h4>
+
+<p>ここでは、設定を追加することでレンダラーの動作を変更するために、カスタムのコンパイル関数をセットアップしてみます。</p>
+
+<p>デフォルトではコンパイル関数は単純に<code>filename</code>を設定し、CSSを書き出します。</p>
+
+<pre><code>    function compile(str, path) {
+      return stylus(str)
+        .import(__dirname + '/css/mixins/blueprint')
+        .import(__dirname + '/css/mixins/css3')
+        .set('filename', path)
+        .set('warn', true)
+        .set('compress', true);
+    }
+</code></pre>
+
+<p>ミドルウェアをConnectに渡し、<code>.styl</code>ファイルをあるディレクトリから読み込み、変換済みの<code>.css</code>ファイルを <em>./public</em> に保存するように設定してみましょう。
+ ここでも、独自の<code>compile</code>関数を用います。</p>
+
+<p>こうすることで、Stylusによって出力された<code>.css</code>ファイルを配信する<code>static</code>レイヤを作ることができます。</p>
+
+<pre><code>    var stylus = require('stylus');
+
+    var app = connect();
+
+    app.use(stylus.middleware({
+        src: __dirname
+      , dest: __dirname + '/public'
+      , compile: compile
+    }));
+
+    app.use(connect.static(__dirname + '/public'));
+</code></pre>
+
+<p>オプション、<code>force</code>が指定されると、スタイルファイルは無条件で再コンパイルされます。このオプションが設定されなかったとしても、Stylusミドルウェアは<code>@import</code>されたファイルの変更を検出できます。</p>
+
+<p>開発目的のために、<code>firebug</code>オプションを有効にすることで<a href="http://github.com/LearnBoost/stylus/blob/master/docs/firebug.md">FireStylus extension for Firebug</a>を使うことができます。これとは別に、<code>lineos</code>オプションを有効にして、生成されたCSSにデバッグ情報を付加することもできます。</p>
+
+<pre><code>    function compile(str, path) {
+      return stylus(str)
+        .import(__dirname + '/css/mixins/blueprint')
+        .import(__dirname + '/css/mixins/css3')
+        .set('filename', path)
+        .set('warn', true)
+        .set('firebug', true)
+        .set('linenos', true);
+    }
+</code></pre>
+</div></div></body></html>
