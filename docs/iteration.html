@@ -49,8 +49,7 @@
 
 <p>繰り返しをミックスインと一緒に使うととても便利です。例えば、挿入と繰り返しを使って、式のペアをプロパティとして扱うことができます。</p>
 
-<p>以下では、カンマ区切りや式のリストがサポートされるように条件付きですべての<code>arguments</code>を利用して、<code>apply()</code>を定義します。
- Below we define <code>apply()</code>, conditionally utilizing all the <code>arguments</code> so that comma-delimited <em>and</em> expression lists are supported:</p>
+<p>以下では、すべての<code>arguments</code>を条件によって活用することで、カンマ区切りと式のリストの <em>両方</em> をサポートできるように<code>apply()</code>を定義します。</p>
 
 <pre><code> apply(props)
    props = arguments if length(arguments) &gt; 1
