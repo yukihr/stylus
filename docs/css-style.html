@@ -9,15 +9,12 @@
 
 <h2>CSS Style <a href="http://learnboost.github.com/stylus/docs/css-style.html">原文</a></h2>
 
-<p>Stylus transparently supports a regular CSS-style syntax. 
- This means you don't need an alternative parser, or specify that a certain file uses a specific style.</p>
-
 <p>Stylusは正規のCSSスタイルを標準でサポートしています。
 これは、パーサーを選択したり、特定のファイルで使用する詳細なスタイルについて明示する必要がないことを意味します。</p>
 
 <h3>例</h3>
 
-<p>以下の小さなスタイルは（Stylusの）インデントアプローチを利用しています。</p>
+<p>以下の小さなスタイルは（Stylusの）インデントアプローチを利用しています:</p>
 
 <pre><code> border-radius()
    -webkit-border-radius arguments
@@ -35,7 +32,7 @@
    border-radius 5px
 </code></pre>
 
-<p>この例は、（通常書くであろう）CSSとしても書くことが出来ます。つまり、括弧、コロン、セミコロンは任意です。</p>
+<p>この例は、（通常書くであろう）CSSとしても書くことが出来ます。つまり、括弧、コロン、セミコロンは任意です:</p>
 
 <pre><code> border-radius() {
    -webkit-border-radius: arguments;
@@ -56,7 +53,7 @@
  }
 </code></pre>
 
-<p>異なるこれらの書き方を混在させてしまうこともありますが、次の書き方は有効です。</p>
+<p>この2種類のスタイルを混在させることが可能なため、以下も有効です:</p>
 
 <pre><code> border-radius()
    -webkit-border-radius: arguments;
@@ -88,13 +85,8 @@
  body a { color: main-color; &amp;:hover { color: main-hover-color; }}
 </code></pre>
 
-<p>There are a few caveats to this rule: 
- since the two styles may be mixed and matched, some indentation rules still apply. 
- So although not <em>every</em> plain-CSS stylesheet will work with zero modification, 
- this feature allows those who prefer CSS syntax to continue doing so while leveraging Stylus' other powerful features.</p>
-
 <p>しかし、このルールには幾つかの注意点があります。
  2つのスタイルを混在させることができるのですが、インデントルールは適用されたままとなります。
- とは言っても、 <em>すべての</em> プレーンなCSSは修正することなしに動作します。
+ そのため、まったく変更せずに、 <em>すべての</em> プレーンなCSSが動作するわけではありませんが、
  この機能により、CSS構文を維持しながら、Stylusの他の強力な機能を活用することができます。</p>
 </div></div></body></html>
